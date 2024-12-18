@@ -1,51 +1,53 @@
 <template>
-  <div class="cred-container">
-    <div v-if="isLoginUser" class="login-container">
-      <h2>Login User</h2>
-      <div>
-        <label for="email">Email</label><br />
-        <input type="email" id="email" placeholder="Email" v-model="userEmail" />
-        <p class="error-fields" v-if="store.state.errorMsg">* {{ store.state.errorMsg }}</p>
+  <div class="container">
+    <div class="cred-container">
+      <div v-if="isLoginUser" class="login-container">
+        <h2>Login User</h2>
+        <div>
+          <label for="email">Email</label><br />
+          <input type="email" id="email" placeholder="Email" v-model="userEmail" />
+          <p class="error-fields" v-if="store.state.errorMsg">* {{ store.state.errorMsg }}</p>
+        </div>
+        <div>
+          <label for="password">Password</label><br />
+          <input
+            :type="isPasswordVisible ? 'text' : 'password'"
+            id="password"
+            placeholder="Password"
+            v-model="userPassword"
+          />
+          <input
+            type="checkbox"
+            id="checkbox-showpassword"
+            v-model="isPasswordVisible"
+            @click="checkboxClicked"
+          />
+          <label for="checkbox-showpassword">Show Password</label>
+        </div>
+        <button @click="loginUser()">Login</button>
+        <p class="register-text">First time User <span @click="switchRegister">Register</span></p>
       </div>
-      <div>
-        <label for="password">Password</label><br />
-        <input
-          :type="isPasswordVisible ? 'text' : 'password'"
-          id="password"
-          placeholder="Password"
-          v-model="userPassword"
-        />
-        <input
-          type="checkbox"
-          id="checkbox-showpassword"
-          v-model="isPasswordVisible"
-          @click="checkboxClicked"
-        />
-        <label for="checkbox-showpassword">Show Password</label>
+      <div v-if="isRegisterUser" class="register-container">
+        <h2>Register User</h2>
+        <div>
+          <label for="email">Email</label><br />
+          <input type="email" id="email" placeholder="Email" v-model="userEmail" />
+          <p class="error-fields" v-if="store.state.errorMsg">* {{ store.state.errorMsg }}</p>
+        </div>
+        <div>
+          <label for="password">Password</label><br />
+          <input type="password" id="password" placeholder="Password" v-model="userPassword" />
+          <input
+            type="checkbox"
+            id="checkbox-showpassword"
+            v-model="isPasswordVisible"
+            @click="checkboxClicked"
+          />
+          <label for="checkbox-showpassword">Show Password</label>
+        </div>
+        <button @click="registerUser()">Register</button>
+        <p class="login-text">Already a user <span @click="switchLogin">Login </span></p>
       </div>
-      <button @click="loginUser()">Login</button>
-      <p class="register-text">First time User <span @click="switchRegister">Register</span></p>
-    </div>
-    <div v-if="isRegisterUser" class="register-container">
-      <h2>Register User</h2>
-      <div>
-        <label for="email">Email</label><br />
-        <input type="email" id="email" placeholder="Email" v-model="userEmail" />
-        <p class="error-fields" v-if="store.state.errorMsg">* {{ store.state.errorMsg }}</p>
-      </div>
-      <div>
-        <label for="password">Password</label><br />
-        <input type="password" id="password" placeholder="Password" v-model="userPassword" />
-        <input
-          type="checkbox"
-          id="checkbox-showpassword"
-          v-model="isPasswordVisible"
-          @click="checkboxClicked"
-        />
-        <label for="checkbox-showpassword">Show Password</label>
-      </div>
-      <button @click="registerUser()">Register</button>
-      <p class="login-text">Already a user <span @click="switchLogin">Login </span></p>
     </div>
   </div>
 </template>
@@ -116,18 +118,30 @@ function checkboxClicked() {
 </script>
 
 <style scoped>
+.container {
+  background: linear-gradient(178.6deg, rgb(20, 36, 50) 11.8%, rgb(124, 143, 161) 83.8%);
+  height: calc(100vh - 71px);
+}
 .cred-container {
   display: flex;
   justify-content: center;
-  margin-top: 30px;
+  padding-top: 30px;
 }
+/* .container {
+  width: 100%;
+  min-height: 100vh;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  
+} */
 .register-container,
 .login-container {
   width: 400px;
   border: 1px solid #ccc;
   padding: 10px;
   border-radius: 5px;
-  box-shadow: 0px 2px 10px #ccc;
+  background-color: #fff;
 }
 .login-container h2,
 .register-container h2 {

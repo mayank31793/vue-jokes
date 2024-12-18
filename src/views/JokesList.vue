@@ -1,66 +1,76 @@
 <template>
-  <div class="jokke-heading-button-container">
-    <h2>Jokes List {{ dataResponse }}</h2>
-    <button
-      v-if="store.state.userEmailAfterSuccessfulLogin != undefined"
-      @click="openAddJokePopup"
-      class="add-joke-button"
-    >
-      Add Joke
-    </button>
-  </div>
-  <div v-if="dataResponse.length == 0" class="no-joke-container">
-    <p>No Joke added</p>
-    <p>Make people laugh with your humour</p>
-    <p v-if="store.state.userEmailAfterSuccessfulLogin == undefined">
-      <RouterLink to="/register">Register/Login</RouterLink> here and continue
-    </p>
-    <div class="svg-icon">&#128522;</div>
-  </div>
-  <div v-else>
-    <div v-for="joke in dataResponse" :key="joke.id" class="joke-list">
-      <h4 class="joke-title">{{ joke.title }}</h4>
-      <p class="joke-body" v-html="joke.body"></p>
-      <span @click="deleteJoke(joke.id)" class="joke-delete">&times;</span>
-      <div class="joke-response">
-        <div class="joke-createdby">
-          <p>{{ 'by - ' + joke.createdBy }}</p>
-        </div>
-        <div class="reaction-container">
-          <p class="dad-joke reactions" @click="reactionAdded(joke.id, 'dadJoke')" title="Dad Joke">
-            &#128526;<span>{{ joke.dadJoke }}</span>
-          </p>
-          <p class="bad-joke reactions" @click="reactionAdded(joke.id, 'badJoke')" title="Bad Joke">
-            &#128530;<span>{{ joke.badJoke }}</span>
-          </p>
-          <p
-            class="good-joke reactions"
-            @click="reactionAdded(joke.id, 'goodJoke')"
-            title="Good Joke"
-          >
-            &#128518;<span>{{ ' ' + joke.goodJoke }}</span>
-          </p>
-          <p
-            class="joke edit-icon"
-            title="Edit"
-            v-if="store.state.userEmailAfterSuccessfulLogin == joke.createdBy"
-            @click="updateJokePopup(joke.id, joke.body, joke.title)"
-          >
-            <span>&#9998;</span>
-          </p>
+  <div class="container">
+    <div class="jokke-heading-button-container">
+      <h2>Jokes List</h2>
+      <button
+        v-if="store.state.userEmailAfterSuccessfulLogin != undefined"
+        @click="openAddJokePopup"
+        class="add-joke-button"
+      >
+        Add Joke
+      </button>
+    </div>
+    <div v-if="dataResponse.length == 0" class="no-joke-container">
+      <p>No Joke added</p>
+      <p>Make people laugh with your humour</p>
+      <p v-if="store.state.userEmailAfterSuccessfulLogin == undefined">
+        <RouterLink to="/register">Register/Login</RouterLink> here and continue
+      </p>
+      <div class="svg-icon">&#128522;</div>
+    </div>
+    <div v-else>
+      <div v-for="joke in dataResponse" :key="joke.id" class="joke-list">
+        <h4 class="joke-title">{{ joke.title }}</h4>
+        <p class="joke-body" v-html="joke.body"></p>
+        <span @click="deleteJoke(joke.id)" class="joke-delete">&times;</span>
+        <div class="joke-response">
+          <div class="joke-createdby">
+            <p>{{ 'by - ' + joke.createdBy }}</p>
+          </div>
+          <div class="reaction-container">
+            <p
+              class="dad-joke reactions"
+              @click="reactionAdded(joke.id, 'dadJoke')"
+              title="Dad Joke"
+            >
+              &#128526;<span>{{ joke.dadJoke }}</span>
+            </p>
+            <p
+              class="bad-joke reactions"
+              @click="reactionAdded(joke.id, 'badJoke')"
+              title="Bad Joke"
+            >
+              &#128530;<span>{{ joke.badJoke }}</span>
+            </p>
+            <p
+              class="good-joke reactions"
+              @click="reactionAdded(joke.id, 'goodJoke')"
+              title="Good Joke"
+            >
+              &#128518;<span>{{ ' ' + joke.goodJoke }}</span>
+            </p>
+            <p
+              class="joke edit-icon"
+              title="Edit"
+              v-if="store.state.userEmailAfterSuccessfulLogin == joke.createdBy"
+              @click="updateJokePopup(joke.id, joke.body, joke.title)"
+            >
+              <span>&#9998;</span>
+            </p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="add-joke-container" v-if="isAddJokeOpen">
-    <div class="add-joke-container-inner">
-      <AddJoke
-        @get-jokes-list-after-new-jokeAdded="getJokesListAfterNewJokeAdded"
-        :type="type"
-        :joke-description="jokeDescription"
-        :joke-title="jokeTitle"
-        :joke-id="jokeId"
-      />
+    <div class="add-joke-container" v-if="isAddJokeOpen">
+      <div class="add-joke-container-inner">
+        <AddJoke
+          @get-jokes-list-after-new-jokeAdded="getJokesListAfterNewJokeAdded"
+          :type="type"
+          :joke-description="jokeDescription"
+          :joke-title="jokeTitle"
+          :joke-id="jokeId"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -87,6 +97,7 @@ async function reactionAdded(id, type) {
   obj[type] = JSON.parse(JSON.stringify(dataResponse.value)).find((res) => res.id == id)[type] + 1
   if (store.state.userEmailAfterSuccessfulLogin) {
     await updateDoc(doc(db, 'Jokes', id), obj)
+    getJokes()
   } else {
     router.push('/register')
   }
@@ -164,9 +175,10 @@ onMounted(() => {
 .joke-list {
   margin: 10px 10px;
   border-radius: 5px;
-  box-shadow: 0px 1px 10px #ccc;
+  /* box-shadow: 0px 1px 10px #ccc; */
   padding: 10px 15px 0px 15px;
   position: relative;
+  background-color: #fff;
 }
 
 .joke-list p {
@@ -251,6 +263,9 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
 }
+.jokke-heading-button-container h2 {
+  color: #6a8d73;
+}
 .jokke-heading-button-container button:hover {
   cursor: pointer;
   background-color: rgb(5, 135, 248);
@@ -278,10 +293,19 @@ onMounted(() => {
   justify-content: center;
   flex-direction: column;
   align-items: center;
+  color: #6a8d73;
+}
+.no-joke-container a {
+  color: #ccc;
+  text-decoration: none;
 }
 .svg-icon {
   width: 40px;
   height: 40px;
   font-size: 40px;
+}
+.container {
+  height: calc(100vh - 71px);
+  background: linear-gradient(178.6deg, rgb(20, 36, 50) 11.8%, rgb(124, 143, 161) 83.8%);
 }
 </style>

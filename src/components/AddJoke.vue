@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="add-joke-component-container">
     <h2 v-if="type == 'add'">Add Joke</h2>
     <h2 v-if="type == 'update'">Update Joke</h2>
     <span class="cancel-add-joke" @click="closeAddJoke">&times;</span>
@@ -66,6 +66,9 @@ function msg() {
 
 function closeAddJoke() {
   emit('getJokesListAfterNewJokeAdded', false)
+  addJokeTitle.value = ''
+  addJokeDescription.value = ''
+  addJokeId.value = null
 }
 
 async function addJoke() {
@@ -96,7 +99,7 @@ async function updateJoke() {
 </script>
 
 <style scoped>
-.container {
+.add-joke-component-container {
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -125,7 +128,7 @@ async function updateJoke() {
   font-size: 15px;
 }
 
-.container button {
+.add-joke-component-container button {
   width: 100%;
   height: 30px;
   border: none;
@@ -135,7 +138,7 @@ async function updateJoke() {
   font-weight: bold;
 }
 
-.container button:hover {
+.add-joke-component-container button:hover {
   cursor: pointer;
   background-color: rgb(5, 135, 248);
 }
